@@ -8,8 +8,8 @@ mongoose.connect(process.env.MONGO_CONNECT_URL, err => {
         console.log(err);
     }else{
         console.log('MONGO connected');
-    }
-})
+    };
+});
 
 app.listen(process.env.PORT, error => {
     if(error) console.log(error);
