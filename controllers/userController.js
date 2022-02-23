@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bcrypt = require('brcyptjs');
+const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
     const user = new User({
@@ -19,6 +19,9 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const selectedUser = await User.findOne({ email: req.body.email });
     if(!selectedUser) return res.status(400).send('Email or Password incorrect');
+
+    const passwordAndUserMatch = bcrypt.compareSync(req.body.password, selectedUser.password);
+    if(!passwordAndUserMatch) return res.status(400).send('Email or Password incorrect');
 
     res.send('User logged')
 };
