@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const userRouter = require('./routers/userRouter');
+const adminRouter = require('./routers/adminRouter');
 const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGO_CONNECT_URL, err => {
@@ -13,6 +14,7 @@ mongoose.connect(process.env.MONGO_CONNECT_URL, err => {
 });
 
 app.use('/user', express.json(), userRouter);
+app.use('/admin', express.json(), adminRouter);
 
 app.listen(process.env.PORT, error => {
     if(error) console.log(error);
