@@ -27,7 +27,7 @@ const login = async (req, res) => {
     const passwordAndUserMatch = bcrypt.compareSync(req.body.password, selectedUser.password);
     if(!passwordAndUserMatch) return res.status(400).send('Email or Password incorrect');
 
-    const token = jwt.sign({ _id: selectedUser._id }, process.env.SECRET_TOKEN);
+    const token = jwt.sign({ _id: selectedUser._id, admin: selectedUser.admin }, process.env.SECRET_TOKEN);
     res.header('authorization-token', token);
 
     res.send('User logged');
