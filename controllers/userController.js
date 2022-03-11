@@ -1,8 +1,12 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { registerValidate, loginValidate } = require('./validate');
 
 const register = async (req, res) => {
+    const { err } = registerValidate(req.body);
+    if(err) return res.status(400).send(err.message);
+
     const selectedUser = await User.findOne({ email: req.body.email });
     if(selectedUser) return res.status(400).send('Email already exists');
 
@@ -21,6 +25,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+    const { err } = loginValidate(req.body);
+    if(err) return res.status(400).send(err.message);
+
     const selectedUser = await User.findOne({ email: req.body.email });
     if(!selectedUser) return res.status(400).send('Email or Password incorrect');
 
