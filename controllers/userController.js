@@ -5,10 +5,10 @@ const { registerValidate, loginValidate } = require('./validate');
 
 const register = async (req, res) => {
     const { err } = registerValidate(req.body);
-    if(err) return res.status(400).send(err.message);
+    if (err) return res.status(400).send(err.message);
 
     const selectedUser = await User.findOne({ email: req.body.email });
-    if(selectedUser) return res.status(400).send('Email already exists');
+    if (selectedUser) return res.status(400).send('Email already exists');
 
     const user = new User({
         name: req.body.name,
@@ -16,23 +16,23 @@ const register = async (req, res) => {
         password: bcrypt.hashSync(req.body.password)
     });
 
-    try{
+    try {
         const savedUser = await user.save();
         res.send(savedUser);
-    }catch(err){
+    } catch (err) {
         res.status(404).send(err.message);
     };
 };
 
 const login = async (req, res) => {
     const { err } = loginValidate(req.body);
-    if(err) return res.status(400).send(err.message);
+    if (err) return res.status(400).send(err.message);
 
     const selectedUser = await User.findOne({ email: req.body.email });
-    if(!selectedUser) return res.status(400).send('Email or Password incorrect');
+    if (!selectedUser) return res.status(400).send('Email or Password incorrect');
 
     const passwordAndUserMatch = bcrypt.compareSync(req.body.password, selectedUser.password);
-    if(!passwordAndUserMatch) return res.status(400).send('Email or Password incorrect');
+    if (!passwordAndUserMatch) return res.status(400).send('Email or Password incorrect');
 
     const token = jwt.sign({ _id: selectedUser._id, admin: selectedUser.admin }, process.env.SECRET_TOKEN);
     res.header('authorization-token', token);
